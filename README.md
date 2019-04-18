@@ -35,7 +35,7 @@ Also included a `docker-compose.yml`
 The CIDR mask of the local IP addresses which will be acessing the proxy. This is so the response to a request makes it back to the client.
 
 #### OPENVPN_FILE_SUBPATH
-Currently implemented
+Currently implemented:
  - pia/uk-london.ovpn
  - pia/uk-manch.ovpn
  - pia/germany-frankf.ovpn
