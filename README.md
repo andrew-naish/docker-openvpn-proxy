@@ -2,13 +2,15 @@
 
 A Privoxy container with OpenVPN - Built upon Alpine Linux so tiny, fast, light and awesome.
 
-I've only included the UK and DE PIA ovpn files, because that's all I need. But you camn generate you own here: https://www.privateinternetaccess.com/pages/ovpn-config-generator.
+I've only included the UK and DE PIA ovpn files, because that's all I need. But you can generate you own here: https://www.privateinternetaccess.com/pages/ovpn-config-generator.
 
 ### If you roll your own PIA files
 modify the auth-user-pass line to:
 ```
 auth-user-pass /app-config/openvpn-credentials.txt
 ```
+
+I plan to check / update this line automatically in future.
 
 ## Setup
 
