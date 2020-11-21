@@ -1,23 +1,21 @@
 #!/bin/sh
+OVPN_CONFIG_BASE_DIR="/app/ovpn/config"
 
-# Test ovpn config
-OVPN_FILE="/app/ovpn/config/${OPENVPN_FILE_SUBPATH}"
-
+# check ovpn config
+OVPN_FILE="${OVPN_CONFIG_BASE_DIR}/${OPENVPN_FILENAME}"
 if [ ! -f "$OVPN_FILE" ] ; then
-    echo "No OpenVPN config. Exiting."
+    echo "No OpenVPN config, Exiting."
     exit 1
 fi
 
-# Add ovpn user/pass
-if [ "${OPENVPN_USERNAME}" = "null" ] || [ "${OPENVPN_PASSWORD}" = "null" ] ; then
-    echo "OpenVPN credentials not set. Exiting."
+# check creds file
+OVPN_CREDS_FILE="${OVPN_CONFIG_BASE_DIR}/credentials.txt"
+if [ ! -f "${OVPN_CREDS_FILE}" ] ; then
+    echo "FATAL | Credentials file does not exist, Exiting."
     exit 1
 else
-    echo "Setting OpenVPN credentials..."
-    mkdir -p /app-config
-    echo $OPENVPN_USERNAME > /app-config/openvpn-credentials.txt
-    echo $OPENVPN_PASSWORD >> /app-config/openvpn-credentials.txt
-    chmod 600 /app-config/openvpn-credentials.txt
+	# secure creds file.. for what it's worth. 
+    chmod 600 ${OVPN_CREDS_FILE}
 fi
 
 openvpn --config $OVPN_FILE

@@ -1,7 +1,8 @@
-version: '2'
+version: "3"
 services:
   ovpn_proxy:
-    image: andymeful/privoxy-openvpn
+#	image: andymeful/privoxy-openvpn
+    build: . 
     cap_add:
       - NET_ADMIN
     devices:
@@ -10,11 +11,9 @@ services:
       - 1.1.1.1
       - 1.0.0.1
     volumes:
-      - /etc/localtime:/etc/caltime:ro
+      - ./openvpn-config:/app/ovpn/config
     environment:
-      - OPENVPN_FILE_SUBPATH=pia/uk-london.ovpn
-      - OPENVPN_USERNAME=null
-      - OPENVPN_PASSWORD=null
+      - OPENVPN_FILENAME=uk-london-aes128.ovpn
       - LOCAL_NETWORK=192.168.1.0/24
     ports:
       - 8080:8080
