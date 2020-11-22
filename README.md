@@ -1,42 +1,48 @@
 # OpenVPN Proxy
-
-A Privoxy container with OpenVPN - Built upon Alpine Linux so tiny, fast, light and awesome.
-
-I've only included the UK and DE PIA ovpn files, because that's all I need. But you camn generate you own here: https://www.privateinternetaccess.com/pages/ovpn-config-generator.
-
-### If you roll your own PIA files
-modify the auth-user-pass line to:
-```
-auth-user-pass /app-config/openvpn-credentials.txt
-```
+A Privoxy container with OpenVPN  
+Built on Alpine Linux so tiny, fast, light and awesome.
 
 ## Setup
 
+### Docker
+
 ```
 docker run -d --device=/dev/net/tun --cap-add=NET_ADMIN \
-    -e "OPENVPN_FILE_SUBPATH=pia/uk-london.ovpn" \
-    -e "OPENVPN_USERNAME=null" \
-    -e "OPENVPN_PASSWORD=null" \
+	--dns=1.1.1.1 --dns=1.0.0.1 \
+    -e "OPENVPN_FILENAME=uk-london-aes128.ovpn" \
     -e "LOCAL_NETWORK=192.168.1.0/24" \
-    -v /etc/localtime:/etc/caltime:ro \
+    -e "ONLINECHECK_DELAY=900" \
+    -v ./openvpn-config:/app/ovpn/config \
     -p 8080:8080 \
     andymeful/privoxy-openvpn
-
-# Of course interpolating your own username and password above.. 
 ```
+`docker-compose.yml` has been included in the repository for reference.  
 
-Also included a `docker-compose.yml`
+### Volume
+1 volume needs to be mapped to `/app/ovpn/config` within the container.  
+This volume should include any ovpn config files to be used and, credentials.txt.
 
-### Environment Variables
+### VPN Config
+I've tested with PIAs ovpn configs but will probably work with any, just make sure to include the following line somewhere:
+```
+auth-user-pass /app/ovpn/config/credentials.txt
+```
+I plan to check for / automagically add this line in future.
 
-#### LOCAL_NETWORK
-The CIDR mask of the local IP addresses which will be acessing the proxy. This is so the response to a request makes it back to the client.
+I left in PIA London config for use if needed.  
+Obviously you'll need to have a PIA account.
 
-#### OPENVPN_FILE_SUBPATH
-Currently implemented
- - pia/uk-london.ovpn
- - pia/uk-manch.ovpn
- - pia/germany-frankf.ovpn
+### Credentials
+Create `./credentials.txt` in the directory which is mapped to `/app/ovpn/config`.   
+On the 1st line put the username, on the 2nd line the password.
 
-#### OPENVPN_USERNAME / OPENVPN_PASSWORD
-Credentials to connect to PIA.
+## Environment Variables
+
+### LOCAL_NETWORK
+The CIDR mask of the local IP addresses which will be acessing the proxy. This is so the response to a request makes it back to the requestee.
+
+### OPENVPN_FILENAME
+The .ovpn file to use. This file should be in the directory which is mapped to `/app/ovpn/config`.
+
+### ONLINECHECK_DELAY
+Will make a web request to Google every x seconds (default 900 (15 minutes)). If the request fails, OpenVPN will be restarted.

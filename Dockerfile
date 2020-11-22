@@ -8,9 +8,8 @@ COPY app /app
 
 RUN find /app -name run | xargs chmod u+x
 
-ENV OPENVPN_FILE_SUBPATH=pia/uk-london.ovpn \
-    OPENVPN_USERNAME=null \
-    OPENVPN_PASSWORD=null \
-    LOCAL_NETWORK=192.168.1.0/24
+ENV OPENVPN_FILENAME=uk-london-aes128.ovpn \
+    LOCAL_NETWORK=192.168.1.0/24 \
+    ONLINECHECK_DELAY=900
 
 CMD ["runsvdir", "/app"]
