@@ -1,2 +1,5 @@
 # comitting my own vpn creds would be silly.
 openvpn-config/credentials.txt
+
+# misc
+.DS_Store
